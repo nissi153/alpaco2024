@@ -34,13 +34,14 @@ public class MemberEntity {
     private Long id;        //bigint
     //@Column : DB열과 매칭 - 변수이름과 DB열의 이름이 다를때 매칭해준다.
     @Column(name="user_id")
-    private String user_id;  //varchar
-    @Column
-    private String user_pw;
-    @Column
-    private String user_name;
-    @Column
-    private String user_role;
+    //DB필드 "user_id" -> "userId" 언더바가 생략되어 매핑됨.
+    private String userId;  //varchar
+    @Column(name="user_pw")
+    private String userPw;
+    @Column(name="user_name")
+    private String userName;
+    @Column(name="user_role")
+    private String userRole;
     @Column
     //@JsonFormat : @RequestBody @ResponseBody 매핑
     //@DateTimeFormat : @RequestParam @ModelAttribute 매핑
