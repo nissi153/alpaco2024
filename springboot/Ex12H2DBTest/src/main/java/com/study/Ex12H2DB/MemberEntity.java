@@ -48,4 +48,12 @@ public class MemberEntity {
     //     DB Date 데이타를 가져올 때, 형식화해줌.
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate joindate;
+
+    public void update(String userId, String userPw, String userName,
+                       String userRole){
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userName = userName;
+        this.userRole = userRole;
+    }
 }

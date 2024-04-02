@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+//@RequiredArgsConstructor
 public class MemberRepositoryTest extends Ex12H2DbApplicationTests {
     //테스트 클래스에서는 생성자 주입 안됨.
     @Autowired
@@ -33,13 +35,13 @@ public class MemberRepositoryTest extends Ex12H2DbApplicationTests {
     @DisplayName("save 테스트") //콘솔에 출력되는 메소드 이름
     public void save(){
         memberRepository.save(new MemberEntity(Long.valueOf(1),
-                "hong", "1234", "홍길동", "ROLE_USER", LocalDate.now()
+                "hong", "1234", "홍길동", "ROLE_USER", LocalDate.parse("2023-01-01")
         ));
         memberRepository.save(new MemberEntity(Long.valueOf(2),
-                "tom", "1234", "톰아저씨", "ROLE_USER", LocalDate.now()
+                "tom", "1234", "톰아저씨", "ROLE_USER", LocalDate.parse("2023-02-01")
         ));
         memberRepository.save(new MemberEntity(Long.valueOf(3),
-                "admin", "1234", "관리자", "ROLE_ADMIN", LocalDate.now()
+                "admin", "1234", "관리자", "ROLE_ADMIN", LocalDate.parse("2023-03-01")
         ));
 
         List<MemberEntity> list = memberRepository.findAll();
@@ -67,6 +69,11 @@ public class MemberRepositoryTest extends Ex12H2DbApplicationTests {
         }else{
             fail("member 값 가져오기 실패");
         }
+        member.ifPresentOrElse((unwrappedMemberEntity) -> {
+            // null이 아닐 때 수행되는 람다식
+            System.out.println(unwrappedMemberEntity.getUserName());
+            assertEquals("홍길동", unwrappedMemberEntity.getUserName());
+        }, () -> fail("member 엔티티가 null입니다."));
     }
     @Test
     @DisplayName("count 테스트")
@@ -99,5 +106,112 @@ public class MemberRepositoryTest extends Ex12H2DbApplicationTests {
 
         long count = memberRepository.countByUserNameIgnoreCaseLike("길");
         System.out.println( "count : " + count);
+
     }
+    @Test
+    @DisplayName("JPQL 테스트")
+    public void jpqlQuery(){
+        List<MemberEntity> list =
+                memberRepository.findByUserId_JPQL_Query("tom");
+        assertEquals(1, list.size());
+        assertEquals("톰아저씨", list.get(0).getUserName());
+    }
+    @Test
+    @DisplayName("Native Query 테스트")
+    public void nativeQuery(){
+        List<MemberEntity> list =
+                memberRepository.findByUserId_nativeQuery("admin");
+        assertEquals(1, list.size());
+        assertEquals("관리자", list.get(0).getUserName());
+    }
+    @Test
+    @DisplayName("update 테스트")
+    public void update(){
+        Optional<MemberEntity> member =
+                memberRepository.findById(1L);
+
+        member.ifPresentOrElse( (newMember) -> {
+            assertEquals("hong", newMember.getUserId());
+            newMember.update("hong2",
+                            newMember.getUserPw(),
+                            newMember.getUserName(),
+                            newMember.getUserRole());
+            memberRepository.save(newMember);
+
+            findById();
+        }, () -> {
+            fail("member 엔티티가 null입니다.");
+        } );
+
+    }
+    @Test
+    @DisplayName("update native SQL 테스트")
+    public void update_nativeSql(){
+        int result = memberRepository.updateById_nativeQuery(1L, "hong3");
+        assertEquals(1, result);
+
+        Optional<MemberEntity> member =
+                memberRepository.findById(1L);
+        assertEquals("hong3", member.get().getUserId() );
+    }
+    @Test
+    @DisplayName("delete 테스트")
+    public void delete(){
+        Optional<MemberEntity> member = memberRepository.findById(1L);
+        member.ifPresent( unwrapMember -> {
+            memberRepository.delete( unwrapMember );
+            System.out.println("삭제 성공");
+
+            Optional<MemberEntity> oldMember = memberRepository.findById(1L);
+            assertEquals(false, oldMember.isPresent());
+        });
+    }
+
+
+//연습문제
+//아래와 같이 H2DB를 초기화 하고, 아래 결과를 출력하시오.
+//1. member 테이블 안에 암호가 "1234"인 회원이 있는지 테스트 하시오.
+    @Test
+    @DisplayName("문제1")
+    public void pr01(){
+        boolean isExists = memberRepository.existsByUserPw("1234");
+        assertEquals( true, isExists );
+    }
+//2. 23년도 3월에 가입한 회원의 수가 1인지 테스트하시오.
+    @Test
+    @DisplayName("문제2")
+    public void pr02(){
+        LocalDate start = LocalDate.of(2023, 3, 1);
+        LocalDate end = LocalDate.of(2023, 3, 31);
+        boolean isExists = memberRepository.existsByJoindateBetween(start,end);
+        assertEquals( true, isExists );
+    }
+//3. "lee"라는 아이디로 회원가입하고자 할때, 아이디 중복인지 테스트하시오.
+    @Test
+    @DisplayName("문제3")
+    public void pr03(){
+        boolean isExists = memberRepository.existsByUserId("lee");
+        assertEquals( false, isExists );
+    }
+//4. "tom"이라는 아이디의 회원정보를 수정하고, 잘 수정되었는지 테스트하시오.
+//    톰아저씨 -> 마이클, 암호 -> 3456
+//* 쿼리 메소드 또는 Native SQL, JPQL 방법 중 하나를 사용하시오.
+    @Test
+    @DisplayName("문제4")
+    public void pr04(){
+        int result = memberRepository.updateByUserId_nativeQuery(
+                "tom", "마이클", "3456");
+        assertEquals(1, result);
+
+        List<MemberEntity> list =
+                memberRepository.findByUserId("tom123");
+        if( list != null && list.size() > 0 ){
+            assertEquals("마이클", list.get(0).getUserName() );
+            assertEquals("3456", list.get(0).getUserPw() );
+        }else{
+            System.out.println("null이거나 size 0 입니다.");
+        }
+
+    }
+
 }
