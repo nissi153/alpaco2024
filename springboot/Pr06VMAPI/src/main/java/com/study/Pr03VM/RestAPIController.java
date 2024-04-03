@@ -45,8 +45,7 @@ public class RestAPIController {
 
         return dto;
     }
-    //fetch("/api/v1/product", {
-    //          method: "PUT",
+
     @PutMapping("/product")
     public ResDto editProduct(@RequestBody EditProductDto dto) {
         System.out.println(dto.getInputName());
@@ -61,6 +60,24 @@ public class RestAPIController {
 
         ResDto resDto = ResDto.builder()
                 .status("ok").message("수정되었습니다.")
+                .count(1).build();
+
+        return resDto;
+    }
+
+    @PostMapping("/product")
+    public ResDto addProduct(@RequestBody AddProductDto dto) {
+        System.out.println(dto.getInputName());
+
+        Product product = Product.builder()
+                .name(dto.getInputName())
+                .price(dto.getInputPrice())
+                .limit_date(dto.getInputLimitDate())
+                .build();
+        list.add( product );
+
+        ResDto resDto = ResDto.builder()
+                .status("ok").message("추가되었습니다.")
                 .count(1).build();
 
         return resDto;
