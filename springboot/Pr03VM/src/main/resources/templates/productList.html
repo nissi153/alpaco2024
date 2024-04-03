@@ -83,7 +83,7 @@
                 </td>
                 <td class="text-center align-middle">
                   <a
-                    href="/editProductForm?index=0"
+                    th:href="|/editProductForm?index=${status.index}|"
                     class="btn btn-primary fw-bold editBtn"
                     role="button"
                     >수정</a
@@ -108,7 +108,7 @@
           class="listSizeBox bg-white rounded-start text-danger fw-bold"
         >
           <span id="total">▲ 총</span>
-          <span class="text-dark">1</span>
+          <span th:text="${count}" class="text-dark">1</span>
           <span id="totalNum">개의 상품이 있습니다.</span>
         </div>
         <!-- 상품 추가하기 버튼 -->
@@ -129,11 +129,11 @@
       function confirmAndNotify(link) {
         var confirmation = confirm("정말로 삭제하시겠습니까?");
         if (confirmation) {
-          alert("삭제하였습니다!");
+          //alert("삭제하였습니다!");
           // "확인"
           window.location.href = link.getAttribute("href");
         }
-        return false;
+        return false; //GET 요청이 안보내짐.
       }
 
       // 언어 선택 토글
