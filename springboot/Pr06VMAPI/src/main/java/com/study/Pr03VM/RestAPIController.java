@@ -1,6 +1,5 @@
 package com.study.Pr03VM;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -33,5 +32,37 @@ public class RestAPIController {
     @GetMapping("/products")
     public List<Product> products(){
         return list;
+    }
+
+    //http://localhost:8080/deleteProduct?index=0
+    @DeleteMapping("/deleteProduct")
+    public ResDto deleteProduct(@RequestParam int index){
+        list.remove( index );
+
+        ResDto dto = ResDto.builder()
+                .status("ok").message("삭제되었습니다")
+                .count(1).build();
+
+        return dto;
+    }
+    //fetch("/api/v1/product", {
+    //          method: "PUT",
+    @PutMapping("/product")
+    public ResDto editProduct(@RequestBody EditProductDto dto) {
+        System.out.println(dto.getInputName());
+        int index = dto.getIndex();
+
+        Product product = Product.builder()
+                .name(dto.getInputName())
+                .price(dto.getInputPrice())
+                .limit_date(dto.getInputLimitDate())
+                .build();
+        list.set( index, product);
+
+        ResDto resDto = ResDto.builder()
+                .status("ok").message("수정되었습니다.")
+                .count(1).build();
+
+        return resDto;
     }
 }

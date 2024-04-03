@@ -2,10 +2,7 @@ package com.study.Pr03VM;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,8 +19,14 @@ public class MainController {
     public String addProductForm(){
         return "addProductForm";
     }
+
     @GetMapping("/editProductForm")
-    public String editProductForm(){
+    public String editProductForm(@RequestParam int index, Model model){
+        model.addAttribute("index", index);
+
+        Product product = RestAPIController.list.get(index);
+        model.addAttribute("product", product);
+
         return "editProductForm";
     }
 }

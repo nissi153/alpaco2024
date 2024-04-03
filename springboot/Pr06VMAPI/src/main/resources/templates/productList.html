@@ -131,6 +131,9 @@
     <script>
       //DOM이 로드되고 나서 호출되는 이벤트 콜백 함수
       window.addEventListener("load", (event) => {
+        getProductList();
+      });
+      function getProductList(){
         //Restful API 서버에 리스트 요청하기
         fetch("/api/v1/products", { 
           method: "GET",
@@ -148,7 +151,7 @@
           makeProductList( json );
 
         })
-      });
+      }
       function makeProductList( productList ){
         let count = document.getElementById("product-count");
         count.innerText = productList.length;
@@ -169,20 +172,21 @@
               ${product.limit_date}
             </td>
             <td class="text-center align-middle">
-              <a
+              <button
                 href="/editProductForm?index=${index}"
                 class="btn btn-primary fw-bold editBtn"
                 role="button"
-                >수정</a
+                onclick="return onEdit(this)"
+                >수정</button
               >
             </td>
             <td class="text-center align-middle">
-              <a
+              <button
                 href="/deleteProduct?index=${index}"
                 class="btn btn-danger fw-bold removeBtn"
                 role="button"
                 onclick="return confirmAndNotify(this)"
-                >삭제</a
+                >삭제</button
               >
             </td>
           </tr>`;
@@ -192,14 +196,40 @@
 
         
       }
+      //상품 수정 페이지 요청
+      function onEdit(button) {
+        const url = button.getAttribute("href");
+        //href="/editProductForm?index=0"
+        console.log("url : "+url);
+        
+        window.location.href = url;
+      }
 
       // 상품 삭제 경고창
-      function confirmAndNotify(link) {
+      function confirmAndNotify(button) {
         var confirmation = confirm("정말로 삭제하시겠습니까?");
         if (confirmation) {
           //alert("삭제하였습니다!");
           // "확인"
-          window.location.href = link.getAttribute("href");
+          // deleteProduct?index=0
+          const url = button.getAttribute("href");
+          console.log("url : "+url);
+          
+          //fetch("/api/v1/deleteProduct?index=0", { 
+          fetch("/api/v1" + url, {             
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          })
+          .then((response) => { //HTTP 응답 객체
+            return response.json();
+          })
+          .then((json) => { //JSON JS객체
+            console.log( json );
+            console.log( json.status );
+            if( json.count >= 1 ){
+              getProductList();
+            }
+          })
         }
         return false; //GET 요청이 안보내짐.
       }
