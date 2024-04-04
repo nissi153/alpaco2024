@@ -34,19 +34,21 @@
                 <td>
                     <!-- location.href='/viewDTO?id=1' -->
                     <button type="button" 
-                        th:onclick="|location.href='@{viewDTO(id=${member.id})}'|">단건조회</button>
+                        th:onclick="|location.href='@{viewMember(id=${member.id})}'|">단건조회</button>
                     <button type="button"
-                            th:onclick="|location.href='viewDTO?id=${member.id}'|">단건조회</button>
+                            th:onclick="|location.href='viewMember?id=${member.id}'|">단건조회</button>
                 </td>
                 <td>
                     <!-- location.href='/deleteDTO?id=1' -->
                     <button type="button" 
-                         th:onclick="|location.href='@{deleteDTO(id=${member.id})}'|">삭제</button>
+                         th:onclick="|location.href='@{deleteMember(id=${member.id})}'|">삭제</button>
                 </td>
             </tr>
         </tbody>
-        
     </table>
+
+    <br><br>
+    <button type="button" onclick="location.href='/joinForm'">회원가입폼으로 이동</button>
     
 </body>
 </html>
