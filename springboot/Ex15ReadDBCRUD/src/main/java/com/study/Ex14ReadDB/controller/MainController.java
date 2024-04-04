@@ -66,4 +66,35 @@ public class MainController {
         });
         return "modifyForm"; //modifyForm.html로 응답
     }
+    @PostMapping("/modifyAction")
+    @ResponseBody
+    public String modifyAction(@ModelAttribute MemberSaveDto dto){
+        try{
+            MemberEntity memberEntity = dto.toUpdateEntity();
+            memberRepository.save( memberEntity );
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("회원정보수정 실패");
+            return "<script>alert('회원정보수정 실패');history.back();</script>";
+        }
+        System.out.println("회원정보수정 성공");
+        return "<script>alert('회원정보수정 성공');location.href='/list';</script>";
+    }
+    @GetMapping("/deleteMember")
+    @ResponseBody
+    public String deleteMember(@RequestParam int id){
+        Optional<MemberEntity> optional = memberRepository.findById((long)id);
+        if( !optional.isPresent() ){
+            System.out.println("회원정보조회 실패");
+            return "<script>alert('회원정보조회 실패');history.back();</script>";
+        }
+        MemberEntity memberEntity = optional.get();
+        try{
+            memberRepository.delete( memberEntity );
+        }catch (Exception e){
+            e.printStackTrace();
+            return "<script>alert('회원정보삭제 실패');history.back();</script>";
+        }
+        return "<script>alert('회원정보삭제 성공');location.href='/list';</script>";
+    }
 }

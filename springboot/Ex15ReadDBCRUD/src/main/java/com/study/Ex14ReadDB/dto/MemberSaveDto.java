@@ -36,6 +36,7 @@ public class MemberSaveDto {
     //DTO를 update용 Entity로 변환해주는 메소드
     public MemberEntity toUpdateEntity(){
         return MemberEntity.builder()
+                .id(id)
                 .userId(userId)
                 .userPw(userPw)
                 .userName(userName)
