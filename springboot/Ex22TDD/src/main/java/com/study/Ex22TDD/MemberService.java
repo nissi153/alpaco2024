@@ -1,5 +1,7 @@
 package com.study.Ex22TDD;
 
+import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 // 클라 <-- View Resolver(html render) <-- Front Controller
 
+@Slf4j
 @Service //비즈니스 로직을 수행하는 클래스에 적용, 회원관련 로직.
 public class MemberService {
     //@Autowired
     //Member member;
 
     public int loginAction(Member member){
+       // log.info( "service member : {}", new Gson().toJson(member) );
+
         //DAO(레파지토리) 클래스를 이용한 DB 검색
         if( member.getLoginId().equals("hong") &&
             member.getLoginPw().equals("1234") ){

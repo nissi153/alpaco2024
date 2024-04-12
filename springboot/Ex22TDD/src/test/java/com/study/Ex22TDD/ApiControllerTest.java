@@ -57,13 +57,13 @@ class ApiControllerTest {
                 .status("ok")
                 .message("로그인 성공!")
                 .build();
-        //객체를 문자열로 JSON문자열로 직렬화한다. GSON 라이브러리 사용.
+//        //객체를 문자열로 JSON문자열로 직렬화한다. GSON 라이브러리 사용.
         Gson gson = new Gson();
-        String content = gson.toJson( resultDto );
-        System.out.println( "content:"+ content);
-        //또다른 방법 : ObjectMapper도 GSON과 같은 역할
-        String json = new ObjectMapper().writeValueAsString(resultDto);
-        System.out.println( "json:" + json );
+//        String content = gson.toJson( resultDto );
+//        System.out.println( "content:"+ content);
+//        //또다른 방법 : ObjectMapper도 GSON과 같은 역할
+//        String json = new ObjectMapper().writeValueAsString(resultDto);
+//        System.out.println( "json:" + json );
 
         Member member = Member.builder()
                 .loginId("hong")
@@ -75,8 +75,11 @@ class ApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 //.andExpect(jsonPath("$.status").value("ok"))
                 .andExpect(jsonPath("$.message").exists())
-                .andExpect(content().string(content))
+                .andExpect(content().string(gson.toJson(resultDto)))
                 .andExpect(status().isOk())
                 .andDo(print());
+
+        //verify : 해당 객체의 메소드가 실행되었는지 체크해줌
+        verify(memberService).loginAction(new Member("hong","1234"));
     }
 }
