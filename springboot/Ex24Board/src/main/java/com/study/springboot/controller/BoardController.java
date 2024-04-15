@@ -49,4 +49,9 @@ public class BoardController {
             return "<script>alert('글쓰기 실패'); history.back();</script>";
         }
     }
+    @GetMapping("/contentForm")
+    public String contentForm(@RequestParam Long boardIdx){
+
+        return "contentForm"; //contentForm.html로 응답
+    }
 }

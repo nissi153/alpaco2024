@@ -35,7 +35,10 @@
             <tr th:each="dto, status : ${ list }">
                 <td th:text="${ status.count }">1</td>
                 <td th:text="${ dto.boardName }">홍길동</td>
-                <td th:text="${ dto.boardTitle }">게시글제목</td>
+                <td>
+                    <a th:href="|contentForm?board_idx=${dto.boardIdx}|" 
+                    th:text="${ dto.boardTitle }">글제목</a>
+                </td>
                 <td th:text="${ #temporals.format(dto.boardDate, 'yyyy-MM-dd HH:mm') }">2024-04-15 10:10</td>
                 <td th:text="${ dto.boardHit }">10</td>
             </tr>
