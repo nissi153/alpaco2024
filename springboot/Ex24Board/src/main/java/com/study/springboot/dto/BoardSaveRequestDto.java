@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class BoardSaveRequestDto {
     private String boardTitle;
     private String boardContent;

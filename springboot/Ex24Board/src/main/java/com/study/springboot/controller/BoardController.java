@@ -43,6 +43,9 @@ public class BoardController {
     public String writeAction(@ModelAttribute BoardSaveRequestDto dto){
         Long newIdx = boardService.save( dto );
 
+        //Board entity = new Board();
+        //Board entity1 = Board.builder().build();
+
         boolean isFound = boardService.existsById(newIdx);
         if( isFound == true){
             return "<script>alert('글쓰기 성공'); location.href='/board/listForm';</script>";
