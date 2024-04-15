@@ -1,5 +1,6 @@
 package com.study.springboot.controller;
 
+import com.study.springboot.domain.board.Board;
 import com.study.springboot.dto.BoardResponseDto;
 import com.study.springboot.dto.BoardSaveRequestDto;
 import com.study.springboot.service.BoardService;
@@ -50,8 +51,32 @@ public class BoardController {
         }
     }
     @GetMapping("/contentForm")
-    public String contentForm(@RequestParam Long boardIdx){
+    public String contentForm(@RequestParam Long boardIdx,
+                              Model model){
+        System.out.println("boardIdx:"+boardIdx);
+
+        //게시글 정보 조회
+        BoardResponseDto dto = boardService.findById( boardIdx );
+        dto.setBoardHit(dto.getBoardHit() + 1);
+        model.addAttribute("dto", dto);
+
+        //조회수 증가
+        boardService.updateHit(boardIdx, dto.getBoardHit() + 1);
 
         return "contentForm"; //contentForm.html로 응답
+    }
+    @PostMapping("/updateAction")
+    @ResponseBody
+    public String updateAction(@ModelAttribute BoardSaveRequestDto dto,
+                               @RequestParam("boardIdx") Long boardIdx){
+        Board entity = boardService.update(boardIdx, dto);
+        if( entity.getBoardIdx() == boardIdx ) {
+            //업데이트 성공
+            //return "<script>alert('글수정 성공'); location.href='/board/listForm';</script>";
+            return "<script>alert('글수정 성공'); location.href='/board/contentForm?boardIdx="+ boardIdx +"';</script>";
+        }else{
+            //업데이트 실패
+            return "<script>alert('글수정 실패'); history.back();</script>";
+        }
     }
 }

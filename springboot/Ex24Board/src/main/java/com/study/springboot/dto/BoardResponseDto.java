@@ -3,10 +3,12 @@ package com.study.springboot.dto;
 import com.study.springboot.domain.board.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class BoardResponseDto {
     private Long boardIdx;

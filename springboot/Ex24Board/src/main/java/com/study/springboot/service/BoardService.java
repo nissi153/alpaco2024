@@ -61,4 +61,34 @@ public class BoardService {
         boolean isFound = boardRepository.existsById( boardIdx );
         return isFound;
     }
+
+    @Transactional(readOnly = true)
+    public BoardResponseDto findById(Long boardIdx){
+        Board entity
+                = boardRepository.findById( boardIdx )
+                .orElseThrow( () -> new IllegalArgumentException(
+                        "없는 글인덱스입니다.boardIdx:"+boardIdx));
+        return new BoardResponseDto(entity);
+    }
+    @Transactional
+    public Board updateHit(final Long boardIdx, final Long hit){
+        Board entity = boardRepository.findById(boardIdx)
+                .orElseThrow( () -> new IllegalArgumentException(
+                        "없는 글인덱스입니다.boardIdx:"+boardIdx));
+        entity.updateHit( hit );
+        return entity;
+    }
+    @Transactional
+    public Board update(final Long boardIdx, final BoardSaveRequestDto dto){
+        Board entity = boardRepository.findById(boardIdx)
+                .orElseThrow( () -> new IllegalArgumentException(
+                        "없는 글인덱스입니다.boardIdx:"+boardIdx));
+        entity.update(dto.getBoardName(), dto.getBoardTitle(),
+                    dto.getBoardContent(), dto.getBoardHit());
+        //save()함수를 쓰지 않아도 update가 된다.
+        //엔티티의 영속성 컨텍스트 속성으로 인해, update가 이루어짐.
+        //@Transactional을 사용해야 됨.
+        //예전의 방식) Board newEntity = boardRepository.save( entity );
+        return entity;
+    }
 }
