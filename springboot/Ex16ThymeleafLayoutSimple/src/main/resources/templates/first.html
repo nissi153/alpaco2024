@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>first.html의 타이틀</title>
+    <!-- 자체 타이틀이 있으면 head.html의 타이틀이 무시된다. -->
+
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+
+    <!-- 자체 css, js -->
+    <link rel="stylesheet" href="/css/first.css">
+    <script src="/js/first.js"></script>
+
+</head>
+    <header th:replace="fragments/header :: headerFragment"></header>
+
+    <p>first.html의 내용</p>
+
+    <footer th:replace="fragments/footer :: footerFragment"></footer>
+
+</html>
