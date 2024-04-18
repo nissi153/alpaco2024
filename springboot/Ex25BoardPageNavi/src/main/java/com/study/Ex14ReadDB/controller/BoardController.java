@@ -1,13 +1,16 @@
 package com.study.Ex14ReadDB.controller;
 
+import com.study.Ex14ReadDB.domain.board.Board;
 import com.study.Ex14ReadDB.dto.BoardResponseDto;
 import com.study.Ex14ReadDB.dto.BoardSaveRequestDto;
 import com.study.Ex14ReadDB.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,12 +26,23 @@ public class BoardController {
         //servlet(JSP) request.forward() : request내장변수 간직, 주소줄 안바뀜.
         //             response.redirect() : request내장변수 소멸, 주소줄 바뀜.
     }
+
     @GetMapping("/listForm")
-    public String listForm(Model model){
-        List<BoardResponseDto> list = boardService.findAll();
+    public String listForm(Model model,
+                           //localhost:8080/board/listForm?page=0
+                           @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Board> paging = boardService.getList( page );
+        model.addAttribute("paging", paging);
+
+        List<BoardResponseDto> list = new ArrayList<>();
+        for( Board entity : paging ) {
+            list.add( new BoardResponseDto(entity) );
+        }
         model.addAttribute("list", list);
+
         return "listForm"; //listForm.html로 응답
     }
+
     @GetMapping("/writeForm")
     public String writeForm(){
         return "writeForm"; //writeForm.html로 응답

@@ -6,9 +6,13 @@ import com.study.Ex14ReadDB.dto.BoardResponseDto;
 import com.study.Ex14ReadDB.dto.BoardSaveRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +31,17 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final BoardRepository boardRepository;
 
-    public List<BoardResponseDto> findAll(){ // 전체 목록 조회
+    // 전체목록 조회 - 페이징
+    public Page<Board> getList(int page){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("boardDate")); //최신글을 먼저보여준다.
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return boardRepository.findAll( pageable );
+    }
+
+    // 전체목록 조회
+    public List<BoardResponseDto> findAll(){
         // 정렬기능 추가
         Sort sort = Sort.by(Sort.Direction.DESC, "boardIdx", "boardDate");
         List<Board> list = boardRepository.findAll(sort);
