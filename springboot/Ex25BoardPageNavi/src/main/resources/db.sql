@@ -3,7 +3,7 @@ USE mydb;
 
 DROP TABLE IF EXISTS board;
 
--- 기본키, 작성자, 글제목, 글내용, 작성일, 조회수
+ --기본키, 작성자, 글제목, 글내용, 작성일, 조회수
 CREATE TABLE `board`(
     board_idx       BIGINT PRIMARY KEY AUTO_INCREMENT,
     board_name      VARCHAR(255),
@@ -27,8 +27,13 @@ CREATE TABLE reply(
     reply_name      VARCHAR(255),
     reply_content   VARCHAR(255),
     reply_date      DATETIME DEFAULT NOW(),
-    reply_board_idx BIGINT NOT NULL
+    reply_board_idx BIGINT NOT NULL,
+    FOREIGN KEY (reply_board_idx) REFERENCES board(board_idx)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
+-- REFERENCES만 적용하는 경우 : MySQL에서는 외래키 제약조건이 적용안됨.(다른 DB는 가능)
+-- FOREIGN KEY와 REFERENCES를 함께 적용하는 경우 : MySQL 외래키 제약조건 적용됨.
 
 INSERT INTO reply VALUES (0, '홍두깨', '댓글 제목1', DEFAULT, 1);
 INSERT INTO reply VALUES (0, '심청', '댓글 제목2', DEFAULT, 2);
