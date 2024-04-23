@@ -6,15 +6,19 @@
 </head>
 <body>
 <h1>upload file 목록</h1>
-<ul th:each="file: ${files}">
+<!--<ul th:each="file: ${files}">-->
     <li>
-        <img th:src="|/upload/${file.uuid}_${file.fileName}|" />
-        <img th:src="|/upload/${file.uuid}_${file.fileName}|" download/>
+        <img th:src="|/upload/eef2b714-2823-4b70-ba36-240056195d05_coffee.jpg|" />
     </li>
+    <br>
     <li>
-        <span th:text="${file.fileName}"></span>
-        <a href="#" th:href="${'/download?uuid='+file.uuid+'&fileName='+file.fileName}">[download]</a>
+        <a th:download="coffee.jpg" th:href="|/upload/eef2b714-2823-4b70-ba36-240056195d05_coffee.jpg|">다운로드</a>
     </li>
+
+    <li>
+        <img th:src="|/upload/eef2b714-2823-4b70-ba36-240056195d05_coffee.jpg|" />
+    </li>
+
 </ul>
 
 </body>

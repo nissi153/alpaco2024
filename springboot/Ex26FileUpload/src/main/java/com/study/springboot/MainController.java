@@ -1,11 +1,14 @@
 package com.study.springboot;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,7 +25,7 @@ public class MainController {
     }
     @PostMapping("/upload")
     public String upload(@RequestParam MultipartFile[] uploadfile,
-                         Model model, HttpSession session) throws IOException {
+                         Model model) throws IOException {
         List<FileDto> list = new ArrayList<>();
         for( MultipartFile file : uploadfile ){
             if(!file.isEmpty()){
@@ -35,16 +38,38 @@ public class MainController {
                 File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
                 //전달한 내용을 실제 물리적인 파일로 저장한다.
                 file.transferTo( newFileName );
+
+                //DB에 파일이름을 저장한다.
+
             }
         }
 
-        session.setAttribute("files", list);
         model.addAttribute("files", list);
+
         return "result"; //result.html로 응답
     }
     @GetMapping("/result")
-    public String result(HttpSession session, Model model){
-        model.addAttribute("files", session.getAttribute("files"));
+    public String result(HttpSession session){
         return "result"; //result.html로 응답
+    }
+
+    @GetMapping("/ckeditor4")
+    public String ckeditor4(){
+        return "upload_ckeditor4"; //upload_ckeditor4.html로 응답
+    }
+
+    @Autowired
+    private UploadService uploadService;
+
+    //ResponseEntity : HttpEntity를 상속받는 응답용 객체
+    @PostMapping("/ckUpload")
+    @ResponseBody
+    public ResponseEntity<CKResponse> ckImageUpload
+            (MultipartFile upload /* 파라미터이름 upload로 고정 */){
+        CKResponse ckResponse = uploadService.ckImageUpload(upload);
+
+        // json 데이터로 응답
+        // { "uploaded": 1, "fileName": "test.jpg", "url": "/img/test.jpg" }
+        return ResponseEntity.ok(ckResponse);
     }
 }
