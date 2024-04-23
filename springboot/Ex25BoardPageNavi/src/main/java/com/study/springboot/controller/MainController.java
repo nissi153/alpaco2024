@@ -9,4 +9,8 @@ public class MainController {
     public String index(){
         return "redirect:/board/";
     }
+    @GetMapping("/apiForm")
+    public String apiForm(){
+        return "apiForm"; //apiForm.html로 응답
+    }
 }

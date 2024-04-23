@@ -2,6 +2,7 @@ package com.study.springboot.service;
 
 import com.study.springboot.domain.board.Board;
 import com.study.springboot.domain.board.BoardRepository;
+import com.study.springboot.domain.reply.Reply;
 import com.study.springboot.dto.BoardResponseDto;
 import com.study.springboot.dto.BoardSaveRequestDto;
 
@@ -70,6 +71,12 @@ public class BoardService {
         return entity.getBoardIdx();
     }
 
+    @Transactional
+    public BoardResponseDto saveToDto(final BoardSaveRequestDto dto){
+        Board entity = boardRepository.save( dto.toEntity() );
+        return new BoardResponseDto(entity);
+    }
+
     @Transactional(readOnly = true)
     public boolean existsById(Long boardIdx){
         boolean isFound = boardRepository.existsById( boardIdx );
@@ -106,11 +113,31 @@ public class BoardService {
         return entity;
     }
     @Transactional
+    public BoardResponseDto updateToDto(final Long boardIdx, final BoardSaveRequestDto dto) {
+        Board entity = boardRepository.findById(boardIdx)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. board_idx="+boardIdx) );
+
+        entity.update(dto.getBoardTitle(), dto.getBoardContent(),
+                dto.getBoardName(), dto.getBoardHit());
+        //엔티티의 영속성 컨텍스트 속성으로 인해 update를 위한 save함수 호출이 필요없다.@Transactional안에서.
+        //Board new_entity = boardRepository.save( entity );
+
+        return new BoardResponseDto(entity);
+    }
+    @Transactional
     public void delete(final Long boardIdx){
         Board entity = boardRepository.findById( boardIdx )
                 .orElseThrow( () -> new IllegalArgumentException("해당 글 인덱스가 없습니다. boardIdx:"+boardIdx));
 
         boardRepository.delete( entity );
 
+    }
+    @Transactional
+    public Long deleteToLong(final Long boardIdx) {
+        Board entity = boardRepository.findById(boardIdx)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. boardIdx="+boardIdx) );
+        boardRepository.delete( entity );
+
+        return boardIdx;
     }
 }
