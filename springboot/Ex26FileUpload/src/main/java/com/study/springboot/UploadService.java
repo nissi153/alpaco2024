@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public class UploadService {
 
-    @Value("${ spring.servlet.multipart.location }")
+    @Value("${spring.servlet.multipart.location}")
     private String CKImageFolder;
     @Value("/upload/")
     private String ckImagePath;
