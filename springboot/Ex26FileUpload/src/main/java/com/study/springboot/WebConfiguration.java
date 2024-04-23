@@ -9,6 +9,9 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+                .addResourceLocations("file:src/main/resources/templates/",
+                        "file:src/main/resources/static/");
+//        registry.addResourceHandler("/**")
+//                .addResourceLocations("classpath:/static/");
     }
 }

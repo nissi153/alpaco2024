@@ -46,7 +46,7 @@ public class MainController {
 
         model.addAttribute("files", list);
 
-        return "result"; //result.html로 응답
+        return "result2"; //result.html로 응답
     }
     @GetMapping("/result")
     public String result(HttpSession session){
