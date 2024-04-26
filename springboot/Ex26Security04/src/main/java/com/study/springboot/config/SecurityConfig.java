@@ -87,7 +87,7 @@ public class SecurityConfig {
     }
     @Bean
     SimpleUrlAuthenticationSuccessHandler successHandler(){
-        return new SimpleUrlAuthenticationSuccessHandler("/snsLoginSucesss");
+        return new SimpleUrlAuthenticationSuccessHandler("/snsLoginSuccess");
     }
     @Bean
     SimpleUrlAuthenticationFailureHandler failureHandler(){
