@@ -154,5 +154,4 @@ public class MemberController {
         return "<script>alert('SNS로그인 실패!'); history.back();</script>";
     }
 
-
 }

@@ -93,8 +93,6 @@ public class SecurityConfig {
     SimpleUrlAuthenticationFailureHandler failureHandler(){
         return new SimpleUrlAuthenticationFailureHandler("/snsLoginFailuer");
     }
-
-
     //BCrypt 암호화 엔코더 빈 생성
     @Bean
     public PasswordEncoder passwordEncoder(){
