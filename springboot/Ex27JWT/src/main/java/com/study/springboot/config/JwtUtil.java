@@ -1,18 +1,15 @@
 package com.study.springboot.config;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -21,7 +18,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class JwtUtil {
     //annotation.Value : properties 또는 yml의 설정정보를 변수에 설정한다.
