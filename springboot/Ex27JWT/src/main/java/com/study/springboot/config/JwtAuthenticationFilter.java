@@ -28,5 +28,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             //SecurityContext에 Authentication객체를 저장해 준다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        filterChain.doFilter(request, response);
     }
 }

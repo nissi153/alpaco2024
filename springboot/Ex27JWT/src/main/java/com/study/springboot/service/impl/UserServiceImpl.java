@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +22,11 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public UserDto createUser(UserRequestDto dto) {
        Users saveEntity = Users.builder()
                .email(dto.getEmail())
-               .password(bCryptPasswordEncoder.encode(dto.getPassWord()))
+               .password(bCryptPasswordEncoder.encode(dto.getPassword()))
                .userRole(dto.getUserRole())
                .build();
         Users newEntity = userRepository.save(
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findUser(String email) {
         //ofNullable : 널이 아니면 정상적인 값을 반환하고, 널이면 Empty를 반환한다.
         // Returns an Optional describing the given value, if non-null, otherwise returns an empty Optional.
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findByEmailAndPassword(String email, String password) {
         Users usersEntity = Optional.ofNullable(
                 userRepository.findByEmail(email)).orElseThrow(
@@ -78,6 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
 
         //Entity 리스트를 DTO 리스트로 바꾸어주는 stream함수이다.

@@ -5,13 +5,11 @@ import com.study.springboot.dto.UserDto;
 import com.study.springboot.dto.UserRequestDto;
 import com.study.springboot.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,11 +22,18 @@ public class ApiController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
-    public UserDto createUser(UserRequestDto dto) {
+    public UserDto createUser(@ModelAttribute UserRequestDto dto) {
         return userService.createUser(dto);
     }
 
-    @GetMapping("/my")
+    @PostMapping("/login")
+    public String login(@ModelAttribute UserRequestDto userRequest)  {
+        UserDto users = userService.findByEmailAndPassword(userRequest.getEmail(), userRequest.getPassword());
+        return jwtUtil.createToken(users.getEmail(), Arrays.asList(users.getUserRole().getValue()));
+    }
+
+    @GetMapping("/my")  //스프링 시큐리티의 현재 세션(인증) 정보를 주입받음.
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public UserDto findUser(Authentication authentication) {
         if (authentication == null) {
             throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.");
@@ -42,9 +47,5 @@ public class ApiController {
         return userService.findAll();
     }
 
-    @PostMapping("/login")
-    public String login(UserRequestDto userRequest)  {
-        UserDto users = userService.findByEmailAndPassword(userRequest.getEmail(), userRequest.getPassWord());
-        return jwtUtil.createToken(users.getEmail(), Arrays.asList(users.getUserRole().getValue()));
-    }
+
 }
