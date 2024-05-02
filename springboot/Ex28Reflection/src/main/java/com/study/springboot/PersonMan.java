@@ -1,5 +1,9 @@
 package com.study.springboot;
 
+import org.springframework.stereotype.Component;
+
+//@Component : 클래스를 스프링 빈으로 등록한다. doScan()함수에서 수행함.
+@Component
 public class PersonMan {
     private String name;
     private int age;

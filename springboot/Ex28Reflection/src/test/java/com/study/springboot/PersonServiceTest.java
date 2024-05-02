@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -13,7 +15,7 @@ class PersonServiceTest {
     private PersonService personService;
 
     @Test
-    void reflectionPersonMan() {
+    void reflectionPersonMan() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         //클래스 정보로 리플렉션하기
         // 1. obj.class
         // 2. obj.getClass()
