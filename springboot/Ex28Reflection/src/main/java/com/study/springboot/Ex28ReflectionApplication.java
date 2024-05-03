@@ -12,7 +12,7 @@ public class Ex28ReflectionApplication {
 	public static void main(String[] args) {
 		AccessAllClassInPackage instance = new AccessAllClassInPackage();
 
-		Set<String> packages =new HashSet<>();
+		Set<String> packages = new HashSet<>();
 		instance.listOfPackage("src/", packages);
 		for (String p: packages) {
 			System.out.println("package = " + p);

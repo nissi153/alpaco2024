@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class AccessAllClassInPackage {
@@ -40,7 +37,9 @@ public class AccessAllClassInPackage {
             if (file.isFile()) {
                 String path=file.getPath();
                 String packName=path.substring(path.indexOf("src")+4, path.lastIndexOf('\\'));
+                //String packName=path.substring(path.indexOf("src")+4, path.lastIndexOf('/')); //mac os
                 pack.add(packName.replace('\\', '.'));
+                //pack.add(packName.replace('/', '.')); //mac os
             } else if (file.isDirectory()) {
 
                 listOfPackage(file.getAbsolutePath(), pack);
