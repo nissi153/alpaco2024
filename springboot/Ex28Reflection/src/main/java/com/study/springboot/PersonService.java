@@ -1,5 +1,8 @@
 package com.study.springboot;
 
+import org.springframework.stereotype.Component;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
 public class PersonService {
@@ -30,6 +33,8 @@ public class PersonService {
                 Parameter[] parameters = con.getParameters();
                 for( Parameter parameter: parameters ){
                     System.out.println("parameter.getName() = " + parameter.getName());
+                    //파라미터 변수 이름을 가져오는 방법은?
+                    //근데 어차피 json 문자열의 key값으로 value를 넣으면 되니 별루 필요가 없다.
                 }
             }
             
@@ -58,7 +63,6 @@ public class PersonService {
         System.out.println("p3 = " + p3);
         System.out.println("p3.getName() = " + p3.getName());
 
-
         //메소드 목록
         System.out.println("메소드 목록");
         Method[] methods = clazz.getDeclaredMethods();
@@ -69,6 +73,7 @@ public class PersonService {
             //method.invoke() : 메소드를 호출(실행)해주는 메소드
         }
         System.out.println();
+
         //필드 목록
         System.out.println("필드 목록");
         Field[] fields = clazz.getDeclaredFields();
@@ -79,5 +84,25 @@ public class PersonService {
             System.out.println(field.getDeclaredAnnotations());
         }
         System.out.println();
-    }
+
+        //클래스에 선언된 어노테이션 목록
+        Annotation[] annotations = clazz.getDeclaredAnnotations();
+        for( Annotation a : annotations ){
+            System.out.println("a.annotationType() = " + a.annotationType());
+            if( a instanceof MyComponent){
+                System.out.println("@MyComponent가 선언됨.");
+                MyComponent component = (MyComponent) a;
+                System.out.println("component.name() = " + component.name());
+                System.out.println("component.age() = " + component.age());
+            }
+            if( a instanceof CustomAnnotation ){
+                System.out.println("@CustomAnnotation가 선언됨.");
+                CustomAnnotation customAnnotation = (CustomAnnotation)a;
+                System.out.println("customAnnotation.mention() = " + customAnnotation.mention());
+            }
+        }
+
+    }//reflectionPersonMan()함수
+
+
 }

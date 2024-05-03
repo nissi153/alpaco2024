@@ -2,8 +2,9 @@ package com.study.springboot;
 
 import org.springframework.stereotype.Component;
 
-//@Component : 클래스를 스프링 빈으로 등록한다. doScan()함수에서 수행함.
-@Component
+// 클래스를 스프링 빈으로 등록한다. doScan()함수에서 수행함.
+@MyComponent(name = "personMan123", age = 20)
+@CustomAnnotation(mention = "축구합시다~")
 public class PersonMan {
     private String name;
     private int age;

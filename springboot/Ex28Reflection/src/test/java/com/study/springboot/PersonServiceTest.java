@@ -1,5 +1,6 @@
 package com.study.springboot;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,4 +23,5 @@ class PersonServiceTest {
         // 3. Class.forName("패키지.클래스이름")
         personService.reflectionPersonMan( PersonMan.class );
     }
+
 }
